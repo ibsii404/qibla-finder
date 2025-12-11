@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Qibla Finder - Janemaz</title>
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --islamic-green: #0F5E48;
+            --islamic-gold: #D4AF37;
+            --off-white: #F8F9FA;
+            --text-dark: #2C3E50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--islamic-green);
+            background-image: radial-gradient(circle at center, #1a7a60 0%, #0F5E48 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--off-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* UI Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--islamic-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        p.instruction {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* The Compass Container */
+        .compass-area {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 30px rgba(0,0,0,0.2), inset 0 0 20px rgba(255,255,255,0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Static Ring for aesthetics */
+        .ring {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border: 2px dashed var(--islamic-gold);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        /* The Rotating Janemaz */
+        #janemaz {
+            width: 140px; /* Adjust size based on your image */
+            height: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+            transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1); /* Smooth rotation */
+            transform-origin: center center;
+            /* Ensure the image points 'UP' by default */
+        }
+
+        /* Start Button (Required for iOS) */
+        .start-btn {
+            background-color: var(--islamic-gold);
+            color: var(--islamic-green);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Data Display (Debug/Info) */
+        .status-box {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+            min-height: 40px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* North Indicator (Small arrow to help orientation) */
+        .north-marker {
+            position: absolute;
+            top: 10px;
+            font-size: 0.8rem;
+            color: var(--islamic-gold);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Qibla Finder</h1>
+        
+        <p class="instruction">
+            Calibrate your phone.<br>
+            Turn your body until the <strong>Prayer Mat</strong> points straight up.
+        </p>
+
+        <div class="compass-area">
+            <div class="north-marker">N</div>
+            <div class="ring"></div>
+            <img id="janemaz" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTYwIj4KICA8IS0tIFNoYXBlIG9mIHRoZSBQcmF5ZXIgTWF0IC0tPgogIDxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjE0MCIgcng9IjUiIGZpbGw9IiMwMDQ0MzMiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPCEtLSBJbm5lciBEZXNpZ24gLS0+CiAgPHBhdGggZD0iTTE1IDIwIEw1MCA1IEw4NSAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDRBRjM3IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cmVjdCB4PSIyMCIgeT0iMzAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI5MCIgZmlsbD0iIzAwNjYzMyIvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNzAiIHI9IjE1IiBmaWxsPSJub25lIiBzdHJva2U9IiNENEFGMzciIHN0cm9rZS13aWR0aD0iMSIvPgogIDwhLS0gVGFzc2VscyBhdCBib3R0b20gLS0+CiAgPGxpbmUgeDE9IjE1IiB5MT0iMTUyIiB4Mj0iMTUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjI1IiB5MT0iMTUyIiB4Mj0iMjUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjM1IiB5MT0iMTUyIiB4Mj0iMzUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjQ1IiB5MT0iMTUyIiB4Mj0iNDUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjU1IiB5MT0iMTUyIiB4Mj0iNTUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjY1IiB5MT0iMTUyIiB4Mj0iNjUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9Ijc1IiB5MT0iMTUyIiB4Mj0iNzUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9Ijg1IiB5MT0iMTUyIiB4Mj0iODUiIHkyPSIxNTgiIHN0cm9rZT0iI0Q0QUYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==" alt="Janemaz Prayer Mat">
+        </div>
+
+        <button id="startBtn" class="start-btn">Find Qibla Direction</button>
+
+        <div id="status" class="status-box">Waiting for permissions...</div>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT LOGIC --- */
+
+        // 1. CONSTANTS
+        const KAABA_LAT = 21.422487;
+        const KAABA_LONG = 39.826206;
+        const statusDiv = document.getElementById('status');
+        const startBtn = document.getElementById('startBtn');
+        const janemaz = document.getElementById('janemaz');
+
+        let qiblaBearing = 0; // The angle of Kaaba relative to True North
+        let currentHeading = 0; // The phone's current direction relative to North
+
+        // 2. QIBLA CALCULATION (Great Circle Formula)
+        function calculateQibla(latitude, longitude) {
+            const phiK = KAABA_LAT * Math.PI / 180.0;
+            const lambdaK = KAABA_LONG * Math.PI / 180.0;
+            const phi = latitude * Math.PI / 180.0;
+            const lambda = longitude * Math.PI / 180.0;
+            
+            const y = Math.sin(lambdaK - lambda);
+            const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
+            
+            let result = Math.atan2(y, x) * 180.0 / Math.PI;
+            
+            // Normalize to 0-360
+            return (result + 360) % 360;
+        }
+
+        // 3. INITIALIZATION
+        startBtn.addEventListener('click', () => {
+            requestPermissions();
+            startBtn.classList.add('hidden');
+        });
+
+        function requestPermissions() {
+            // Step 1: Get GPS Location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        qiblaBearing = calculateQibla(latitude, longitude);
+                        statusDiv.innerText = `Location found. Qibla is at ${Math.round(qiblaBearing)}°`;
+                        
+                        // Step 2: Initialize Compass
+                        initCompass();
+                    },
+                    (error) => {
+                        statusDiv.innerText = "Error: Please enable Location Services.";
+                        console.error(error);
+                        startBtn.classList.remove('hidden');
+                    }
+                );
+            } else {
+                statusDiv.innerText = "Geolocation not supported on this browser.";
+            }
+        }
+
+        // 4. COMPASS HANDLING
+        function initCompass() {
+            // iOS 13+ requires specific permission request for DeviceOrientation
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        } else {
+                            statusDiv.innerText = "Permission to access orientation was denied.";
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Non-iOS 13+ devices (Android / Older iOS)
+                if ('ondeviceorientationabsolute' in window) {
+                    window.addEventListener('deviceorientationabsolute', handleOrientation);
+                } else if ('ondeviceorientation' in window) {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                } else {
+                    statusDiv.innerText = "Device orientation not supported.";
+                }
+            }
+        }
+
+        // 5. ROTATION LOGIC
+        function handleOrientation(event) {
+            let compass = 0;
+
+            // iOS (WebKit) logic
+            if (event.webkitCompassHeading) {
+                compass = event.webkitCompassHeading;
+            } 
+            // Android / Non-WebKit logic
+            else if (event.alpha) {
+                // alpha is the device's rotation around z-axis.
+                // On some Androids, alpha is relative to start.
+                // We attempt to calculate absolute compass if 'absolute' property is true or implied.
+                // Note: Android compass calibration can be tricky across devices.
+                compass = 360 - event.alpha;
+            }
+
+            currentHeading = compass;
+            
+            // LOGIC: 
+            // 1. The Phone points to 'currentHeading' (e.g., 0° is North).
+            // 2. The Qibla is at 'qiblaBearing' (e.g., 100°).
+            // 3. To make the Janemaz point to Qibla, we must rotate the IMAGE.
+            // Formula: Rotation = Qibla - PhoneHeading
+            
+            let rotation = qiblaBearing - currentHeading;
+
+            // Apply rotation to the image
+            janemaz.style.transform = `rotate(${rotation}deg)`;
+
+            // UX Feedback
+            // Check if user is facing Qibla (within +/- 5 degrees)
+            const diff = Math.abs((rotation % 360));
+            // Since rotation can be negative or > 360, we simplify check visually
+            // Ideally, if the mat is straight up (rotation near 0), the user is facing Qibla.
+            
+            // Actually, visually:
+            // If rotation is 0, the mat image is upright relative to the screen.
+            // This means the phone is pointing exactly at the Qibla bearing.
+            
+            // Normalize rotation to -180 to 180 for "close enough" calculation
+            let displayRotation = rotation % 360;
+            if (displayRotation > 180) displayRotation -= 360;
+            if (displayRotation < -180) displayRotation += 360;
+
+            if (Math.abs(displayRotation) < 5) {
+                janemaz.style.filter = "drop-shadow(0 0 15px #D4AF37)"; // Glow gold
+                statusDiv.innerText = "You are facing the Qibla!";
+                statusDiv.style.color = "#D4AF37";
+                if(navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+            } else {
+                janemaz.style.filter = "drop-shadow(0 10px 15px rgba(0,0,0,0.5))";
+                statusDiv.innerText = `Rotate phone to align Janemaz.`;
+                statusDiv.style.color = "rgba(255,255,255,0.7)";
+            }
+        }
+    </script>
+</body>
+</html>
